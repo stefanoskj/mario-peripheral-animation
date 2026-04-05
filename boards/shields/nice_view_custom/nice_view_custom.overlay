@@ -1,11 +1,30 @@
-/*
- * Copyright (c) 2022 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
- */
+/* SPDX-License-Identifier: MIT */
 
+/* 1️⃣ Label the SPI controller that will talk to the nice!view */
+&spi0 {
+    /* Give the SPI0 node the label the nice!view shield expects */
+    nice_view_spi: /* label */ ;
+
+    /* Chip‑select GPIO – adjust the pin number to match your wiring */
+    cs-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;   /* Example: CS on P0.14 */
+
+    /* If you are using non‑default SPI pins, uncomment and adjust:
+    pinctrl-0 = <&spi0_custom_pins>;
+    pinctrl-names = "default";
+
+    spi0_custom_pins: spi0_pins {
+        psels = <
+            NRF_PSEL(SPIM_SCK, 0, 15)   /* SCK  – P0.15 (default) */
+            NRF_PSEL(SPIM_MOSI, 0, 13)  /* MOSI – P0.13 (default) */
+            NRF_PSEL(SPIM_MISO, 0, 12)  /* MISO – P0.12 (optional) */
+        >;
+    };
+};
+
+/* 2️⃣ Now that the label exists, add the display as a child */
 &nice_view_spi {
     status = "okay";
+
     nice_view: ls0xx@0 {
         compatible = "sharp,ls0xx";
         spi-max-frequency = <1000000>;
@@ -15,8 +34,7 @@
     };
 };
 
-/ {
-    chosen {
-        zephyr,display = &nice_view;
-    };
+/* 3️⃣ Tell Zephyr which node is the display (used by ZMK) */
+&nice_view_spi {
+    zephyr,display = &nice_view;
 };
