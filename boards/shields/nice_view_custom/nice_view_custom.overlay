@@ -1,7 +1,8 @@
-&spi0 {
-    nice_view_spi: /* label */ ;
-    cs-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-};
+/*
+ * Copyright (c) 2022 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
 
 &nice_view_spi {
     status = "okay";
@@ -14,9 +15,8 @@
     };
 };
 
-&nice_view_spi {
-    zephyr,display = &nice_view;
-};/* 3️⃣ Tell Zephyr which node is the display (used by ZMK) */
-&nice_view_spi {
-    zephyr,display = &nice_view;
+/ {
+    chosen {
+        zephyr,display = &nice_view;
+    };
 };
